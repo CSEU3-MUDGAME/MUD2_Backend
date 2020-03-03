@@ -12,6 +12,9 @@ class Square:
         self.x = x
         self.y = y
         self.sides = {'up': True, 'down': True, 'left': True, 'right': True}
+        self.outstanding = True
+        self.contents = []
+        self.players = []
 
 
     def __str__(self):
@@ -110,7 +113,7 @@ class Maze:
                 # get the adjacent square using new coordinates
                 adjacent_square = maze.square_at(new_x, new_y)
                 # if this adjacent square has not been visited (has) all sides
-                if adjacent_square.has_all_sides():
+                if adjacent_square.outstanding:
                     # then add this square to the list of adjacents
                     adjacent_squares.append((direction, adjacent_square))
         # return the list of adjacent squares
@@ -142,6 +145,7 @@ class Maze:
             direction, next_square = random.choice(adjacent_squares)
             # remove the sides of the squares to join them together
             current_square.connect_squares(next_square, direction)
+            current_square.outstanding = False
             # add the current square to the stack
             square_stack.append(current_square)
             # move to the next square
