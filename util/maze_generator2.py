@@ -1,8 +1,8 @@
 import random
 
 class Square:
-    def __init__(self, x, y):
-        self.id = None
+    def __init__(self, x, y, id=None):
+        self.id = id
         self.description = None
         self.x = x
         self.y = y
@@ -16,25 +16,11 @@ class Square:
         self.players = []
 
     def __str__(self):
-        
-        sides = ''
-        for key in self.sides:
-            # if key == False:
-                print(key)
-
-        def listToString(list):
-            output = ''
-            for value in list:
-                output += value
-            return output
-
         room = f'\nYou are in room number: {self.id}'
         coordinates = f'\n(your coordinates are: {self.x}, {self.y})'
-        options = f'\n\nYou can move: \n'
+        options = f'\n\nYou can move: \n  above you is: {self.up_to}\n  below you is: {self.down_to}\n  left is: {self.left_to}\n  right is: {self.right_to}'
 
-        return listToString(sides)
-
-        # return f"{room}{coordinates}{options}"
+        return f'{room}{coordinates}{options}'
 
     side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
@@ -66,6 +52,13 @@ class Maze:
             for square in array:
                 square.id = i
                 i += 1
+
+        # self.maze_map = []
+        # i = 0
+        # for x in range(height):
+        #     for y in range(width):
+        #         self.maze_map.append(Square(i, x, y))
+        #         i += 1
         # -------------------------------------------------------
 
     def square_at(self, x, y):
@@ -160,6 +153,7 @@ maze = Maze(30, 10)
 maze.create_maze()
 
 print(maze)
+print('\n', maze.maze_map[0][0])
 
 # test_square = Square(1,1)
 
@@ -177,8 +171,3 @@ print(maze)
 # print(test_square.sides['right'])
 
 # print(test_square)
-
-print('up: ', maze.maze_map[1][1].up_to)
-print('down: ', maze.maze_map[1][1].down_to)
-print('left: ', maze.maze_map[1][1].left_to)
-print('right: ', maze.maze_map[1][1].right_to)
