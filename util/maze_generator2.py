@@ -1,10 +1,6 @@
-# df_maze.py
 import random
 
-
 class Square:
-    # A side separates a adjacent squares.
-
     def __init__(self, x, y):
         self.id = None
         self.description = None
@@ -47,12 +43,12 @@ class Square:
         self.sides[side] = False
         adjacent_square.sides[Square.side_pairs[side]] = False
 
-    def set_connecting_square(self, adjacent_square, side):
+    def set_connecting_square(self, adjacent_square, direction):
         # set apposing direction for adjacent square
-        apposing_side = Square.side_pairs[side]
+        apposing_side = Square.side_pairs[direction]
         # add adjacent square name to the direction
-        setattr(self, f"{side}_to", adjacent_square)
-        setattr(adjacent_square, f"{apposing_side}_to", self)
+        setattr(self, f"{direction}_to", adjacent_square.id)
+        setattr(adjacent_square, f"{apposing_side}_to", self.id)
 
 class Maze:
     
@@ -182,7 +178,7 @@ print(maze)
 
 # print(test_square)
 
-# print(maze.maze_map[1][1].up_to)
-print(maze.maze_map[1][1].down_to)
-# print(maze.maze_map[1][1].left_to)
-# print(maze.maze_map[1][1].right_to)
+print('up: ', maze.maze_map[1][1].up_to)
+print('down: ', maze.maze_map[1][1].down_to)
+print('left: ', maze.maze_map[1][1].left_to)
+print('right: ', maze.maze_map[1][1].right_to)
