@@ -112,8 +112,9 @@ class Maze:
             if (0 <= new_x < self.height) and (0 <= new_y < self.width):
                 # get the adjacent square using new coordinates
                 adjacent_square = maze.square_at(new_x, new_y)
-                # if this adjacent square has not been visited (has) all sides
+                # if this adjacent square has not been visited (has all sides)
                 if adjacent_square.has_all_sides():
+                # if adjacent_square.outstangding:
                     # then add this square to the list of adjacents
                     adjacent_squares.append((direction, adjacent_square))
         # return the list of adjacent squares
@@ -152,24 +153,24 @@ class Maze:
             # increment the count for next room
             count += 1
 
-maze = Maze(5, 5)
+maze = Maze(30, 10)
 maze.create_maze()
 
 print(maze)
 
-test_square = Square(1,1)
+# test_square = Square(1,1)
 
-print('\n',test_square.sides['up'])
-print(test_square.sides['down'])
-print(test_square.sides['left'])
-print(test_square.sides['right'])
+# print('\n',test_square.sides['up'])
+# print(test_square.sides['down'])
+# print(test_square.sides['left'])
+# print(test_square.sides['right'])
 # print('\n',test_square.has_all_sides())
-test_square.sides['down'] = False
+# test_square.sides['down'] = False
 # print('',test_square.has_all_sides())
 # test_square.id = 55
-print('\n',test_square.sides['up'])
-print(test_square.sides['down'])
-print(test_square.sides['left'])
-print(test_square.sides['right'])
+# print('\n',test_square.sides['up'])
+# print(test_square.sides['down'])
+# print(test_square.sides['left'])
+# print(test_square.sides['right'])
 
-print(test_square)
+# print(test_square)

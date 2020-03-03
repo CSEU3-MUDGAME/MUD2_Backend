@@ -50,7 +50,6 @@ class Square:
     def set_connecting_square(self, adjacent_square, side):
         # set apposing direction for adjacent square
         apposing_side = Square.side_pairs[side]
-        print('apposing side', apposing_side)
         # add adjacent square name to the direction
         setattr(self, f"{side}_to", adjacent_square)
         setattr(adjacent_square, f"{apposing_side}_to", self)
@@ -137,7 +136,7 @@ class Maze:
         square_stack = []
 
         # set the count to 1 for creating the maze
-        count = 1
+        count = 0
 
         while count < self.num_rooms:
             adjacent_squares = self.get_adjacent_squares(current_square)
@@ -153,7 +152,7 @@ class Maze:
             # remove the sides of the squares to join them together
             current_square.connect_squares(next_square, direction)
             current_square.set_connecting_square(next_square, direction)
-            current_square.outstanding = False
+            next_square.outstanding = False
             # add the current square to the stack
             square_stack.append(current_square)
             # move to the next square
@@ -161,7 +160,7 @@ class Maze:
             # increment the count for next room
             count += 1
 
-maze = Maze(15, 15)
+maze = Maze(30, 10)
 maze.create_maze()
 
 print(maze)
@@ -183,7 +182,7 @@ print(maze)
 
 # print(test_square)
 
-print(maze.maze_map[1][1].up_to)
+# print(maze.maze_map[1][1].up_to)
 print(maze.maze_map[1][1].down_to)
-print(maze.maze_map[1][1].left_to)
-print(maze.maze_map[1][1].right_to)
+# print(maze.maze_map[1][1].left_to)
+# print(maze.maze_map[1][1].right_to)
