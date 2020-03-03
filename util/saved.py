@@ -4,18 +4,20 @@ import random
 
 class Square:
     # A side separates a adjacent squares.
-    side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
     def __init__(self, x, y):
         self.id = None
         self.description = None
         self.x = x
         self.y = y
+        self.up_to = None
+        self.down_to = None
+        self.right_to = None
+        self.left_to = None
         self.sides = {'up': True, 'down': True, 'left': True, 'right': True}
         self.outstanding = True
         self.contents = []
         self.players = []
-
 
     def __str__(self):
         
@@ -38,15 +40,20 @@ class Square:
 
         # return f"{room}{coordinates}{options}"
 
-    def has_all_sides(self):
-        # return true if all sides are present
-        return all(self.sides.values())
+    side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
     def connect_squares(self, adjacent_square, side):
         # remove adjoining side to create route
         self.sides[side] = False
         adjacent_square.sides[Square.side_pairs[side]] = False
 
+    def set_connecting_square(self, adjacent_square, side):
+        # set apposing direction for adjacent square
+        apposing_side = Square.side_pairs[side]
+        print('apposing side', apposing_side)
+        # add adjacent square name to the direction
+        setattr(self, f"{side}_to", adjacent_square)
+        setattr(adjacent_square, f"{apposing_side}_to", self)
 
 class Maze:
     
@@ -113,7 +120,7 @@ class Maze:
                 # get the adjacent square using new coordinates
                 adjacent_square = maze.square_at(new_x, new_y)
                 # if this adjacent square has not been visited (has) all sides
-                if adjacent_square.has_all_sides():
+                if adjacent_square.outstanding:
                     # then add this square to the list of adjacents
                     adjacent_squares.append((direction, adjacent_square))
         # return the list of adjacent squares
@@ -145,6 +152,8 @@ class Maze:
             direction, next_square = random.choice(adjacent_squares)
             # remove the sides of the squares to join them together
             current_square.connect_squares(next_square, direction)
+            current_square.set_connecting_square(next_square, direction)
+            current_square.outstanding = False
             # add the current square to the stack
             square_stack.append(current_square)
             # move to the next square
@@ -152,24 +161,29 @@ class Maze:
             # increment the count for next room
             count += 1
 
-maze = Maze(5, 5)
+maze = Maze(15, 15)
 maze.create_maze()
 
 print(maze)
 
-test_square = Square(1,1)
+# test_square = Square(1,1)
 
-print('\n',test_square.sides['up'])
-print(test_square.sides['down'])
-print(test_square.sides['left'])
-print(test_square.sides['right'])
+# print('\n',test_square.sides['up'])
+# print(test_square.sides['down'])
+# print(test_square.sides['left'])
+# print(test_square.sides['right'])
 # print('\n',test_square.has_all_sides())
-test_square.sides['down'] = False
+# test_square.sides['down'] = False
 # print('',test_square.has_all_sides())
 # test_square.id = 55
-print('\n',test_square.sides['up'])
-print(test_square.sides['down'])
-print(test_square.sides['left'])
-print(test_square.sides['right'])
+# print('\n',test_square.sides['up'])
+# print(test_square.sides['down'])
+# print(test_square.sides['left'])
+# print(test_square.sides['right'])
 
-print(test_square)
+# print(test_square)
+
+print(maze.maze_map[1][1].up_to)
+print(maze.maze_map[1][1].down_to)
+print(maze.maze_map[1][1].left_to)
+print(maze.maze_map[1][1].right_to)
