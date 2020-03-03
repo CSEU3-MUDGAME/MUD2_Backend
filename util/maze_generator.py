@@ -4,18 +4,20 @@ import random
 
 class Square:
     # A side separates a adjacent squares.
-    side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
     def __init__(self, x, y):
         self.id = None
         self.description = None
         self.x = x
         self.y = y
+        self.up_to = None
+        self.down_to = None
+        self.right_to = None
+        self.left_to = None
         self.sides = {'up': True, 'down': True, 'left': True, 'right': True}
         self.outstanding = True
         self.contents = []
         self.players = []
-
 
     def __str__(self):
         
@@ -38,15 +40,19 @@ class Square:
 
         # return f"{room}{coordinates}{options}"
 
-    def has_all_sides(self):
-        # return true if all sides are present
-        return all(self.sides.values())
+    side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
     def connect_squares(self, adjacent_square, side):
         # remove adjoining side to create route
         self.sides[side] = False
         adjacent_square.sides[Square.side_pairs[side]] = False
 
+    def set_connecting_square(self, adjacent_square, side):
+        # set apposing direction for adjacent square
+        apposing_side = Square.side_pairs[side]
+        # add adjacent square name to the direction
+        setattr(self, f"{side}_to", adjacent_square)
+        setattr(adjacent_square, f"{apposing_side}_to", self)
 
 class Maze:
     
