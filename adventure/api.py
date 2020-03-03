@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from decouple import config
 from django.contrib.auth.models import User
 from .models import *
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 import json
 from .serializer import RoomSerializer
 
@@ -64,6 +65,7 @@ def move(request):
 # get rooms 
 @csrf_exempt
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_rooms(request):
     rooms = Room.objects.all()
     serializer = RoomSerializer(rooms)

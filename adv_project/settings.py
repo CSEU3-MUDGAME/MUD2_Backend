@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'rest_auth.registration',
+    'rest_auth.registration'
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -126,6 +126,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
+        'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 CORS_ORIGIN_ALLOW_ALL=True
@@ -151,3 +154,4 @@ STATIC_URL = '/static/'
 
 import django_heroku
 django_heroku.settings(locals())
+del DATABASES['default']['OPTIONS']['sslmode']
