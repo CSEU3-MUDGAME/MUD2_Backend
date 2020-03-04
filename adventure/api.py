@@ -62,15 +62,21 @@ def move(request):
 
 
 # get rooms 
+# @csrf_exempt
+# @api_view(["GET"])
+# def get_rooms(request):
+#     rooms = Room.objects.all()
+#     serializer = RoomSerializer(rooms)
+#     if request.user:
+#         return JsonResponse(serializer.data, status=200)
+#     else:
+#         return JsonResponse({'errorMessage: Not allowed' }, status=403)
+
 @csrf_exempt
 @api_view(["GET"])
 def get_rooms(request):
-    rooms = Room.objects.all()
-    serializer = RoomSerializer(rooms)
-    if request.user:
-        return JsonResponse(serializer.data, status=200)
-    else:
-        return JsonResponse({'errorMessage: Not allowed' }, status=403)
+    data = list(Room.objects.all().values())
+    return JsonResponse(data, safe=False)
 
 
 @csrf_exempt
