@@ -5,6 +5,7 @@ class Square:
     def __init__(self, x, y, id=None):
         self.id = id
         self.description = None
+        self.game_exit = False
         self.x = x
         self.y = y
         self.up_to = None
@@ -119,6 +120,23 @@ class Maze:
         # return the list of adjacent squares
         return adjacent_squares
 
+    def create_random_exit(self):
+        exit_x = random.randint(self.width // 2, self.width-1)
+        exit_y = random.randint(self.height // 2, self.height-1)
+        exit_square = self.square_at(exit_x, exit_y)
+        exit_square.game_exit = True
+        # print('exit point', exit_square.x, exit_square.y)
+
+    def random_location(self):
+        loc_x = random.randint(0, self.width-1)
+        loc_y = random.randint(0, self.height-1)
+        location = self.square_at(loc_x, loc_y)
+        return location
+
+    def place_items(self, items):
+        for item in items:
+            self.random_location().contents.append(item)
+
     def create_maze(self):
         # set current position to coordinates 0,0
         current_x = 0
@@ -156,12 +174,30 @@ class Maze:
             # increment the count for next room
             count += 1
 
+        self.create_random_exit()
 
-maze = Maze(23, 23)
+        items = [
+            'rope',
+            'sword',
+            'bucket',
+            'torch',
+            'shoes',
+        ]
+
+        self.place_items(items)
+
+    # set exit point at location 0,0 for easy checking
+    # exit_point = (0, 0)
+    # set exit point at random location in opposite quarter
+
+        
+
+
+maze = Maze(5, 5)
 maze.create_maze()
 
 print(maze)
-print('\n', maze.maze_map[20][6], '\n')
+print('\n', maze.maze_map[0][0], '\n')
 
 # for array in maze.maze_map:
 #     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
