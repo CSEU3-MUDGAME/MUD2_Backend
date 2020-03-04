@@ -19,9 +19,11 @@ class Square:
     def __str__(self):
         room = f'\nYou are in room number: {self.id}'
         coordinates = f'\n(your coordinates are: {self.x}, {self.y})'
-        options = f'\n\nYou can move: \n  above you is: {self.up_to}\n  below you is: {self.down_to}\n  left is: {self.left_to}\n  right is: {self.right_to}'
+        options = f'\n\nOptions: \n  above you is: {self.up_to}\n  below you is: {self.down_to}\n  left is: {self.left_to}\n  right is: {self.right_to}'
+        contents = f'\n\nThis room contains: \n  {self.contents}'
+        players = f'\n\nOther players in the room: \n  {self.players}'
 
-        return f'{room}{coordinates}{options}'
+        return f'{room}{coordinates}{options}{contents}{players}'
 
     side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
@@ -32,10 +34,10 @@ class Square:
 
     def set_connecting_square(self, adjacent_square, direction):
         # set apposing direction for adjacent square
-        apposing_side = Square.side_pairs[direction]
+        opposite_direction = Square.side_pairs[direction]
         # add adjacent square name to the direction
         setattr(self, f"{direction}_to", adjacent_square.id)
-        setattr(adjacent_square, f"{apposing_side}_to", self.id)
+        setattr(adjacent_square, f"{opposite_direction}_to", self.id)
 
 
 class Maze:
