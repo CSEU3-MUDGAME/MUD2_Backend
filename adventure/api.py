@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .models import *
 from rest_framework.decorators import api_view
 import json
+from .serializer import RoomSerializer
 
 # instantiate pusher
 # pusher = Pusher(app_id=config('PUSHER_APP_ID'), key=config('PUSHER_KEY'), secret=config('PUSHER_SECRET'), cluster=config('PUSHER_CLUSTER'))
@@ -58,6 +59,18 @@ def move(request):
     else:
         players = room.playerNames(player_id)
         return JsonResponse({'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
+
+
+# get rooms 
+@csrf_exempt
+@api_view(["GET"])
+def get_rooms(request):
+    rooms = Room.objects.all()
+    serializer = RoomSerializer(rooms)
+    if request.user:
+        return JsonResponse(serializer.data, status=200)
+    else:
+        return JsonResponse({'errorMessage: Not allowed' }, status=403)
 
 
 @csrf_exempt
