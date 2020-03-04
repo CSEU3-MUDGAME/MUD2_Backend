@@ -112,7 +112,7 @@ class Maze:
             if (0 <= new_x < self.width) and (0 <= new_y < self.height):
                 # get the adjacent square using new coordinates
                 adjacent_square = maze.square_at(new_x, new_y)
-                # if this adjacent square has not been visited (has) all sides
+                # if this adjacent square has not been visited
                 if adjacent_square.outstanding:
                     # then add this square to the list of adjacents
                     adjacent_squares.append((direction, adjacent_square))
@@ -157,8 +157,12 @@ class Maze:
             count += 1
 
 
-maze = Maze(30, 10)
+maze = Maze(23, 23)
 maze.create_maze()
 
 print(maze)
-print('\n', maze.maze_map[25][0], '\n')
+print('\n', maze.maze_map[20][6], '\n')
+
+# for array in maze.maze_map:
+#     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
+#             'left': square.left_to, 'right': square.right_to} for square in array])
