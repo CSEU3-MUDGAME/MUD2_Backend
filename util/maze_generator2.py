@@ -17,13 +17,14 @@ class Square:
         self.players = []
 
     def __str__(self):
+        section = '-' * 30
         room = f'\nYou are in room number: {self.id}'
         coordinates = f'\n(your coordinates are: {self.x}, {self.y})'
         options = f'\n\nOptions: \n  above you is: {self.up_to}\n  below you is: {self.down_to}\n  left is: {self.left_to}\n  right is: {self.right_to}'
         contents = f'\n\nThis room contains: \n  {self.contents}'
         players = f'\n\nOther players in the room: \n  {self.players}'
 
-        return f'{room}{coordinates}{options}{contents}{players}'
+        return f'\n{section}\n{room}{coordinates}{options}{contents}{players}\n\n{section}'
 
     side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 
@@ -144,7 +145,9 @@ class Maze:
             direction, next_square = random.choice(adjacent_squares)
             # remove the sides of the squares to join them together
             current_square.connect_squares(next_square, direction)
+            # set the connection, linking the 2 rooms together
             current_square.set_connecting_square(next_square, direction)
+            # set outstanding to false to prevent it being selected again
             next_square.outstanding = False
             # add the current square to the stack
             square_stack.append(current_square)
