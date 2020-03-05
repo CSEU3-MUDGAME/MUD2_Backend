@@ -5,10 +5,10 @@ class Square:
         self.game_exit = False
         self.x = x
         self.y = y
-        self.up_to = None
-        self.down_to = None
-        self.right_to = None
-        self.left_to = None
+        self.up_to = -1
+        self.down_to = -1
+        self.right_to = -1
+        self.left_to = -1
         self.sides = {'up': True, 'down': True, 'left': True, 'right': True}
         self.outstanding = True
         self.contents = []

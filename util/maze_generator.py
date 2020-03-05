@@ -1,34 +1,19 @@
 import random
-from items import items
-from square_generator import Square
-
-from django.contrib.auth.models import User
-from adventure.models import Player, Room
-
+from util.items import items
+from util.square_generator import Square
 
 class Maze:
     def __init__(self, width, height):
         self.height = height
         self.width = width
         self.num_rooms = height * width
+        self.maze_map = [[Square(x, y) for y in range(height)] for x in range(width)]
 
-        # -------------------------------------------------------
-        self.maze_map = [[Square(x, y) for y in range(height)]
-                         for x in range(width)]
-
-        i = 0
+        i = 1
         for array in self.maze_map:
             for square in array:
                 square.id = i
                 i += 1
-
-        # self.maze_map = []
-        # i = 0
-        # for x in range(height):
-        #     for y in range(width):
-        #         self.maze_map.append(Square(i, x, y))
-        #         i += 1
-        # -------------------------------------------------------
 
     def square_at(self, x, y):
         # Return Square at (x,y)
@@ -54,10 +39,10 @@ class Maze:
                     maze_row.append(' +')
             maze_rows.append(''.join(maze_row))
 
-        maze = '\n'.join(maze_rows)
+        print_maze = '\n'.join(maze_rows)
         dimensions = f"\nMaze\n  height: {self.height}\n  width: {self.width}\n  Rooms: {self.num_rooms}"
 
-        return f'\n{maze}\n\n{dimensions}'
+        return f'\n{print_maze}\n\n{dimensions}'
 
     def get_adjacent_squares(self, current):
         # set the direction as coordinate movements
@@ -76,7 +61,7 @@ class Maze:
             # check the coordinates are within the defined grid
             if (0 <= new_x < self.width) and (0 <= new_y < self.height):
                 # get the adjacent square using new coordinates
-                adjacent_square = maze.square_at(new_x, new_y)
+                adjacent_square = self.square_at(new_x, new_y)
                 # if this adjacent square has not been visited
                 if adjacent_square.outstanding:
                     # then add this square to the list of adjacents
@@ -147,29 +132,11 @@ class Maze:
         self.create_random_exit()
         self.place_items(items)
 
-maze = Maze(5, 5)
-maze.create_maze()
 
-print(maze)
-print('\n', maze.maze_map[0][0], '\n')
+# print(maze)
+# print('\n', maze.maze_map[0][0], '\n')
 
 # ---------- print the maze array in the terminal ----------
 # for array in maze.maze_map:
 #     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
-#             'left': square.left_to, 'right': square.right_to} for square in array])
-
-
-for array in maze.maze_map:
-    for square in array:
-        roomNo = square.id
-        n_to = square.up_to
-        s_to = square.down_to
-        e_to = square.right_to
-        w_to = square.left_to
-        up = square.up_to != None
-        down = square.down_to != None
-        left = square.left_to != None
-        right = square.right_to != None
-        items = "".join(square.contents)
-        new_room = Room(id=roomNo, n_to=n_to, s_to=s_to, e_to=e_to, w_to=w_to, up=up, down=down, left=left, right=right, items=items)
-        new_room.save()
+            # 'left': square.left_to, 'right': square.right_to} for square in array])

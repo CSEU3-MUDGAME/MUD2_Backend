@@ -44,5 +44,4 @@ items = [
   'the statue of liberty',
   'a guitar',
   'toilet paper',
-  '',
 ]
