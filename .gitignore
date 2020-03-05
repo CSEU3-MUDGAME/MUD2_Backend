@@ -1,4 +1,4 @@
+.vscode
 /.env
 /db.sqlite3
 /requirements.txt
-.vscode

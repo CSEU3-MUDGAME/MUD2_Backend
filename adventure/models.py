@@ -6,12 +6,15 @@ from rest_framework.authtoken.models import Token
 import uuid
 
 class Room(models.Model):
-    title = models.CharField(max_length=50, default="DEFAULT TITLE")
-    description = models.CharField(max_length=500, default="DEFAULT DESCRIPTION")
     n_to = models.IntegerField(default=0)
     s_to = models.IntegerField(default=0)
     e_to = models.IntegerField(default=0)
     w_to = models.IntegerField(default=0)
+    up = models.BooleanField(default=False)
+    down = models.BooleanField(default=False)
+    left = models.BooleanField(default=False)
+    right = models.BooleanField(default=False)
+    items = models.CharField(max_length=500, default="")
     def connectRooms(self, destinationRoom, direction):
         destinationRoomID = destinationRoom.id
         try:

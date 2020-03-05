@@ -2,6 +2,9 @@ import random
 from items import items
 from square_generator import Square
 
+from django.contrib.auth.models import User
+from adventure.models import Player, Room
+
 
 class Maze:
     def __init__(self, width, height):
@@ -154,3 +157,19 @@ print('\n', maze.maze_map[0][0], '\n')
 # for array in maze.maze_map:
 #     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
 #             'left': square.left_to, 'right': square.right_to} for square in array])
+
+
+for array in maze.maze_map:
+    for square in array:
+        roomNo = square.id
+        n_to = square.up_to
+        s_to = square.down_to
+        e_to = square.right_to
+        w_to = square.left_to
+        up = square.up_to != None
+        down = square.down_to != None
+        left = square.left_to != None
+        right = square.right_to != None
+        items = "".join(square.contents)
+        new_room = Room(id=roomNo, n_to=n_to, s_to=s_to, e_to=e_to, w_to=w_to, up=up, down=down, left=left, right=right, items=items)
+        new_room.save()
