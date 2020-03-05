@@ -12,4 +12,3 @@ class RoomSerializer(serializers.Serializer):
     left = serializers.BooleanField(default=False)
     right = serializers.BooleanField(default=False)
     items = serializers.CharField(max_length=500, default="")
-    players = serializers.CharField(max_length=500, default="")

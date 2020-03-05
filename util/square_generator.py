@@ -12,7 +12,6 @@ class Square:
         self.sides = {'up': True, 'down': True, 'left': True, 'right': True}
         self.outstanding = True
         self.contents = []
-        self.players = []
 
     def __str__(self):
         section = '-' * 30
@@ -20,9 +19,8 @@ class Square:
         coordinates = f'\n(your coordinates are: {self.x}, {self.y})'
         options = f'\n\nOptions: \n  above you is: {self.up_to}\n  below you is: {self.down_to}\n  left is: {self.left_to}\n  right is: {self.right_to}'
         contents = f'\n\nThis room contains: \n  {self.contents}'
-        players = f'\n\nOther players in the room: \n  {self.players}'
 
-        return f'\n{section}\n{room}{coordinates}{options}{contents}{players}\n\n{section}'
+        return f'\n{section}\n{room}{coordinates}{options}{contents}\n\n{section}'
 
     side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
 

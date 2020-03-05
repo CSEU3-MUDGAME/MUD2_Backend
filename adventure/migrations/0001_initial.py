@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                 ('down', models.BooleanField(default=False)),
                 ('left', models.BooleanField(default=False)),
                 ('right', models.BooleanField(default=False)),
+                ('game_exit', models.BooleanField(default=False)),
             ],
         ),       
         migrations.CreateModel(
