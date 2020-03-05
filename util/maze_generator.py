@@ -1,69 +1,33 @@
-# df_maze.py
 import random
+from items import items
+from square_generator import Square
 
-
-class Square:
-    # A side separates a adjacent squares.
-    side_pairs = {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
-
-    def __init__(self, x, y):
-        self.id = None
-        self.description = None
-        self.x = x
-        self.y = y
-        self.sides = {'up': True, 'down': True, 'left': True, 'right': True}
-        self.outstanding = True
-        self.contents = []
-        self.players = []
-
-
-    def __str__(self):
-        
-        sides = ''
-        for key in self.sides:
-            # if key == False:
-                print(key)
-
-        def listToString(list):
-            output = ''
-            for value in list:
-                output += value
-            return output
-
-        room = f'\nYou are in room number: {self.id}'
-        coordinates = f'\n(your coordinates are: {self.x}, {self.y})'
-        options = f'\n\nYou can move: \n'
-
-        return listToString(sides)
-
-        # return f"{room}{coordinates}{options}"
-
-    def has_all_sides(self):
-        # return true if all sides are present
-        return all(self.sides.values())
-
-    def connect_squares(self, adjacent_square, side):
-        # remove adjoining side to create route
-        self.sides[side] = False
-        adjacent_square.sides[Square.side_pairs[side]] = False
+from django.contrib.auth.models import User
+from adventure.models import Player, Room
 
 
 class Maze:
-    
-    def __init__(self, height, width):
-
+    def __init__(self, width, height):
         self.height = height
         self.width = width
         self.num_rooms = height * width
 
         # -------------------------------------------------------
-        self.maze_map = [[Square(x, y) for y in range(width)] for x in range(height)]
+        self.maze_map = [[Square(x, y) for y in range(height)]
+                         for x in range(width)]
 
         i = 0
         for array in self.maze_map:
             for square in array:
                 square.id = i
                 i += 1
+
+        # self.maze_map = []
+        # i = 0
+        # for x in range(height):
+        #     for y in range(width):
+        #         self.maze_map.append(Square(i, x, y))
+        #         i += 1
         # -------------------------------------------------------
 
     def square_at(self, x, y):
@@ -73,26 +37,27 @@ class Maze:
     def __str__(self):
         # Return a (crude) string representation of the maze
 
-        maze_rows = ['-' * self.height*2]
-        for y in range(self.width):
+        maze_rows = ['-' * self.width*2]
+        for y in range(self.height):
             maze_row = ['|']
-            for x in range(self.height):
+            for x in range(self.width):
                 if self.maze_map[x][y].sides['right']:
                     maze_row.append(' |')
                 else:
                     maze_row.append('  ')
             maze_rows.append(''.join(maze_row))
             maze_row = ['|']
-            for x in range(self.height):
+            for x in range(self.width):
                 if self.maze_map[x][y].sides['down']:
                     maze_row.append('-+')
                 else:
                     maze_row.append(' +')
             maze_rows.append(''.join(maze_row))
-        
-        dimensions = f"\n\nWorld\n  height: {self.height}\n  height: {self.width},\n"
 
-        return '\n'.join(maze_rows)
+        maze = '\n'.join(maze_rows)
+        dimensions = f"\nMaze\n  height: {self.height}\n  width: {self.width}\n  Rooms: {self.num_rooms}"
+
+        return f'\n{maze}\n\n{dimensions}'
 
     def get_adjacent_squares(self, current):
         # set the direction as coordinate movements
@@ -109,16 +74,38 @@ class Maze:
             new_x = current.x + direction_x
             new_y = current.y + direction_y
             # check the coordinates are within the defined grid
-            if (0 <= new_x < self.height) and (0 <= new_y < self.width):
+            if (0 <= new_x < self.width) and (0 <= new_y < self.height):
                 # get the adjacent square using new coordinates
                 adjacent_square = maze.square_at(new_x, new_y)
-                # if this adjacent square has not been visited (has all sides)
-                if adjacent_square.has_all_sides():
-                # if adjacent_square.outstangding:
+                # if this adjacent square has not been visited
+                if adjacent_square.outstanding:
                     # then add this square to the list of adjacents
                     adjacent_squares.append((direction, adjacent_square))
         # return the list of adjacent squares
         return adjacent_squares
+
+    def create_random_exit(self):
+        # create random x and y coordinates further than halfway
+        exit_x = random.randint(self.width // 2, self.width-1)
+        exit_y = random.randint(self.height // 2, self.height-1)
+        # retrieve square at above coordinates
+        exit_square = self.square_at(exit_x, exit_y)
+        # set exit to true at this square
+        exit_square.game_exit = True
+        # print('exit point', exit_square.x, exit_square.y)
+
+    def random_location(self):
+        # create random x and y coordinates
+        loc_x = random.randint(0, self.width-1)
+        loc_y = random.randint(0, self.height-1)
+        # retrieve square at above coordinates
+        location = self.square_at(loc_x, loc_y)
+        # return the square for use by other function
+        return location
+
+    def place_items(self, items):
+        for item in items:
+            self.random_location().contents.append(item)
 
     def create_maze(self):
         # set current position to coordinates 0,0
@@ -127,11 +114,11 @@ class Maze:
         # Get the square at the initial coordinates
         current_square = self.square_at(current_x, current_y)
 
-        # create an empty stack of squares to be 
+        # create an empty stack of squares to be
         square_stack = []
 
         # set the count to 1 for creating the maze
-        count = 1
+        count = 0
 
         while count < self.num_rooms:
             adjacent_squares = self.get_adjacent_squares(current_square)
@@ -146,6 +133,10 @@ class Maze:
             direction, next_square = random.choice(adjacent_squares)
             # remove the sides of the squares to join them together
             current_square.connect_squares(next_square, direction)
+            # set the connection, linking the 2 rooms together
+            current_square.set_connecting_square(next_square, direction)
+            # set outstanding to false to prevent it being selected again
+            next_square.outstanding = False
             # add the current square to the stack
             square_stack.append(current_square)
             # move to the next square
@@ -153,24 +144,32 @@ class Maze:
             # increment the count for next room
             count += 1
 
-maze = Maze(30, 10)
+        self.create_random_exit()
+        self.place_items(items)
+
+maze = Maze(5, 5)
 maze.create_maze()
 
 print(maze)
+print('\n', maze.maze_map[0][0], '\n')
 
-# test_square = Square(1,1)
+# ---------- print the maze array in the terminal ----------
+# for array in maze.maze_map:
+#     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
+#             'left': square.left_to, 'right': square.right_to} for square in array])
 
-# print('\n',test_square.sides['up'])
-# print(test_square.sides['down'])
-# print(test_square.sides['left'])
-# print(test_square.sides['right'])
-# print('\n',test_square.has_all_sides())
-# test_square.sides['down'] = False
-# print('',test_square.has_all_sides())
-# test_square.id = 55
-# print('\n',test_square.sides['up'])
-# print(test_square.sides['down'])
-# print(test_square.sides['left'])
-# print(test_square.sides['right'])
 
-# print(test_square)
+for array in maze.maze_map:
+    for square in array:
+        roomNo = square.id
+        n_to = square.up_to
+        s_to = square.down_to
+        e_to = square.right_to
+        w_to = square.left_to
+        up = square.up_to != None
+        down = square.down_to != None
+        left = square.left_to != None
+        right = square.right_to != None
+        items = "".join(square.contents)
+        new_room = Room(id=roomNo, n_to=n_to, s_to=s_to, e_to=e_to, w_to=w_to, up=up, down=down, left=left, right=right, items=items)
+        new_room.save()
