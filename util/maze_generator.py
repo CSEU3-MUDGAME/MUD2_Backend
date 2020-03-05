@@ -2,6 +2,7 @@ import random
 from items import items
 from square_generator import Square
 
+
 class Maze:
     def __init__(self, width, height):
         self.height = height
@@ -81,16 +82,22 @@ class Maze:
         return adjacent_squares
 
     def create_random_exit(self):
+        # create random x and y coordinates further than halfway
         exit_x = random.randint(self.width // 2, self.width-1)
         exit_y = random.randint(self.height // 2, self.height-1)
+        # retrieve square at above coordinates
         exit_square = self.square_at(exit_x, exit_y)
+        # set exit to true at this square
         exit_square.game_exit = True
         # print('exit point', exit_square.x, exit_square.y)
 
     def random_location(self):
+        # create random x and y coordinates
         loc_x = random.randint(0, self.width-1)
         loc_y = random.randint(0, self.height-1)
+        # retrieve square at above coordinates
         location = self.square_at(loc_x, loc_y)
+        # return the square for use by other function
         return location
 
     def place_items(self, items):
@@ -137,19 +144,13 @@ class Maze:
         self.create_random_exit()
         self.place_items(items)
 
-    # set exit point at location 0,0 for easy checking
-    # exit_point = (0, 0)
-    # set exit point at random location in opposite quarter
-
-        
-
-
 maze = Maze(5, 5)
 maze.create_maze()
 
 print(maze)
 print('\n', maze.maze_map[0][0], '\n')
 
+# ---------- print the maze array in the terminal ----------
 # for array in maze.maze_map:
 #     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
 #             'left': square.left_to, 'right': square.right_to} for square in array])
