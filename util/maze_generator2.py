@@ -1,5 +1,8 @@
+from django.contrib.auth.models import User
+from adventure.models import Player, Room
 import random
 
+Room.objects.all().delete()
 
 class Square:
     def __init__(self, x, y, id=None):
@@ -193,12 +196,9 @@ class Maze:
         
 
 
-maze = Maze(5, 5)
+maze = Maze(30, 30)
 maze.create_maze()
 
 print(maze)
-print('\n', maze.maze_map[0][0], '\n')
+# print('\n', maze.maze_map[0][0], '\n')
 
-# for array in maze.maze_map:
-#     print([{'id': square.id, 'sides': square.sides, 'up': square.up_to, 'down': square.down_to,
-#             'left': square.left_to, 'right': square.right_to} for square in array])

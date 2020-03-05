@@ -21,7 +21,7 @@ def initialize(request):
     uuid = player.uuid
     room = player.room()
     players = room.playerNames(player_id)
-    return JsonResponse({'uuid': uuid, 'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players}, safe=True)
+    return JsonResponse({'uuid': uuid, 'name':player.user.username, 'roomNo':room.id, 'n_to':room.n_to, 's_to':room.s_to, 'e_to': room.e_to, 'w_to': room.w_to, 'up': room.up, 'down': room.down, 'left':room.left, 'right': room.right, 'players':players}, safe=True)
 
 
 # @csrf_exempt
@@ -55,10 +55,12 @@ def move(request):
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has walked {dirs[direction]}.'})
         # for p_uuid in nextPlayerUUIDs:
         #     pusher.trigger(f'p-channel-{p_uuid}', u'broadcast', {'message':f'{player.user.username} has entered from the {reverse_dirs[direction]}.'})
-        return JsonResponse({'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'players':players, 'error_msg':""}, safe=True)
+        # return JsonResponse({'name':player.user.username, 'title':nextRoom.title, 'description':nextRoom.description, 'players':players, 'error_msg':""}, safe=True)
+        return JsonResponse({'name':player.user.username, 'roomNo':nextRoom.id, 'n_to':nextRoom.n_to, 's_to':nextRoom.s_to, 'e_to': nextRoom.e_to, 'w_to': nextRoom.w_to, 'up': nextRoom.up, 'down': nextRoom.down, 'left': nextRoom.left, 'right': nextRoom.right, 'players':players, 'error_msg':""}, safe=True)
     else:
         players = room.playerNames(player_id)
-        return JsonResponse({'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
+        # return JsonResponse({'name':player.user.username, 'title':room.title, 'description':room.description, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
+        return JsonResponse({'name':player.user.username, 'roomNo':room.id, 'n_to':room.n_to, 's_to':room.s_to, 'e_to': room.e_to, 'w_to': room.w_to, 'up': room.up, 'down': room.down, 'left': room.left, 'right': room.right, 'players':players, 'error_msg':"You cannot move that way."}, safe=True)
 
 
 # get rooms 
@@ -66,11 +68,11 @@ def move(request):
 @api_view(["GET"])
 def get_rooms(request):
     rooms = Room.objects.all()
-    serializer = RoomSerializer(rooms)
+    serializer = RoomSerializer(rooms, many=True)
     if request.user:
-        return JsonResponse(serializer.data, status=200)
+        return JsonResponse(serializer.data, safe=False, status=200)
     else:
-        return JsonResponse({'errorMessage: Not allowed' }, status=403)
+        return JsonResponse({'errorMessage: Not allowed' }, safe=True, status=403)
 
 
 @csrf_exempt

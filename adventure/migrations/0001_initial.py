@@ -18,15 +18,18 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Room',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(default='DEFAULT TITLE', max_length=50)),
-                ('description', models.CharField(default='DEFAULT DESCRIPTION', max_length=500)),
+                ('id', models.AutoField(auto_created=True, serialize=False, primary_key=True, verbose_name='ID')),  
+                ('items',models.CharField(default='', max_length=500)),              
                 ('n_to', models.IntegerField(default=0)),
                 ('s_to', models.IntegerField(default=0)),
                 ('e_to', models.IntegerField(default=0)),
                 ('w_to', models.IntegerField(default=0)),
+                ('up', models.BooleanField(default=False)),
+                ('down', models.BooleanField(default=False)),
+                ('left', models.BooleanField(default=False)),
+                ('right', models.BooleanField(default=False)),
             ],
-        ),
+        ),       
         migrations.CreateModel(
             name='Player',
             fields=[
