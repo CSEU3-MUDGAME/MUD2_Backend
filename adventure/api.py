@@ -21,7 +21,7 @@ def initialize(request):
     uuid = player.uuid
     room = player.room()
     players = room.playerNames(player_id)
-    return JsonResponse({'uuid': uuid, 'name':player.user.username, 'roomNo':room.id, 'n_to':room.n_to, 's_to':room.s_to, 'e_to': room.e_to, 'w_to': room.w_to, 'up': room.up, 'down': room.down, 'left':room.left, 'right': room.right, 'players':players}, safe=True)
+    return JsonResponse({'uuid': uuid, 'name':player.user.username, 'roomNo':room.id, 'n_to':room.n_to, 's_to':room.s_to, 'e_to': room.e_to, 'w_to': room.w_to, 'up': room.up, 'down': room.down, 'left':room.left, 'right': room.right, 'players':players, 'items': room.items, 'game_exit': room.game_exit}, safe=True)
 
 
 # @csrf_exempt
